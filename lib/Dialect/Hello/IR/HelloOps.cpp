@@ -55,11 +55,31 @@ void HelloWorldOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
   state.addOperands({input});
 }
 */
+
 //===----------------------------------------------------------------------===//
 // HelloConvertOp
 
 void F32ToF64TensorOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                  mlir::Value input) {
-  state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
-  state.addOperands({input});
+		mlir::Value input) {
+	state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
+	state.addOperands({input});
+}
+
+//===----------------------------------------------------------------------===//
+// TaskOp
+
+void TaskOp::build(mlir::OpBuilder &builder, mlir::OperationState &state, mlir::IntegerAttr task_id)
+{
+	state.addAttribute("task_id", task_id);
+	Region *region = state.addRegion();
+	TaskOp::ensureTerminator(*region, builder, state.location);
+}
+
+//===----------------------------------------------------------------------===//
+// AddPartOp
+
+void AddPartOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
+		mlir::Value lhs, mlir::Value rhs) {
+	state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
+	state.addOperands({lhs, rhs});
 }
