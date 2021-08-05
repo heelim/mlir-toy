@@ -43,8 +43,6 @@ struct ToyPrintOpToHello : public mlir::ConversionPattern {
 
 	LogicalResult matchAndRewrite(mlir::Operation *op, mlir::ArrayRef<Value> operands,
 			mlir::ConversionPatternRewriter &rewriter) const final {
-		auto *context  = op->getContext();
-		auto loc = op->getLoc();
 		PrintOpAdaptor operandAdaptor(operands);
 		rewriter.replaceOpWithNewOp<HelloWorldOp>(op, operandAdaptor.input());
 		return success();
@@ -75,6 +73,7 @@ void ConvertToyToHelloPass::runOnOperation() {
 	target.addLegalDialect<HelloOpsDialect>();
 	
 	target.addLegalOp<ToyReturnOp>();
+	target.addLegalOp<AddOp>();
 	
 	RewritePatternSet patterns(&getContext());
 
