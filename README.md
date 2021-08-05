@@ -4,7 +4,7 @@ This is an example of an out-of-tree [MLIR](https://mlir.llvm.org/) dialect alon
 
 ## Building
 
-This setup assumes that you have built LLVM and MLIR in `$BUILD_DIR` and installed them to `$PREFIX`. To build and launch the tests, run
+This setup assumes that you have built and installed LLVM and MLIR. To build and launch the tests, run
 ```sh
 mkdir build && cd build
 cmake -G Ninja ..
