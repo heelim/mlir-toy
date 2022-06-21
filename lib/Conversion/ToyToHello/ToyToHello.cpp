@@ -62,6 +62,12 @@ namespace{
 				registry.insert<ToyOpsDialect, HelloOpsDialect>();
 			}  
 			void runOnOperation() final;
+      			StringRef getArgument() const override {
+				return "toy";
+      			}
+      			StringRef getDescription() const override {
+				return "toy to hello lowering pass";
+      			}
 		};
 }
 

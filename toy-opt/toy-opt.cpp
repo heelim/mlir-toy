@@ -48,8 +48,7 @@ static llvm::cl::opt<std::string> output_filename("o",
     llvm::cl::init("-"));
     
 void initPasses() {
-  mlir::registerPass("toy",
-      "toy to hello lowering pass",
+  mlir::registerPass(
       []() -> std::unique_ptr<mlir::Pass> {
         return mlir::createConvertToyToHelloPass();
       });
