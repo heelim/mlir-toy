@@ -14,6 +14,7 @@ set(CMAKE_BUILD_TYPE Release)
 set(LLVM_DIR ~/llvm-project/build/lib/cmake/llvm)
 set(MLIR_DIR ~/llvm-project/build/lib/cmake/mlir)
 set(CMAKE_CXX_STANDARD 14 CACHE STRING "C++ standard to conform to")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(MLIR REQUIRED CONFIG)
 
