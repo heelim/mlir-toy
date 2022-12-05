@@ -1,7 +1,7 @@
 //===- ToyOps.cpp - Toy dialect ops ---------------*- C++ -*-===//
 //===----------------------------------------------------------------------===//
 
-#include "mlir/Dialect/StandardOps/IR/Ops.h"
+#include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/IR/Block.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinOps.h"
@@ -19,19 +19,21 @@
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Value.h"
 
-#include "mlir/Transforms/InliningUtils.h"
 #include "mlir/Transforms/DialectConversion.h"
+#include "mlir/Transforms/InliningUtils.h"
 
 #include "Dialect/Toy/IR/ToyOps.hpp"
 
 using namespace mlir;
+using namespace mlir::func;
 
 //===----------------------------------------------------------------------===//
 // Toy dialect.
 //===----------------------------------------------------------------------===//
 
-ToyOpsDialect::ToyOpsDialect(MLIRContext *context)
-  : Dialect(getDialectNamespace(), context, TypeID::get<ToyOpsDialect>()) {
+ToyOpsDialect::ToyOpsDialect(MLIRContext* context)
+    : Dialect(getDialectNamespace(), context, TypeID::get<ToyOpsDialect>())
+{
   addOperations<
 #define GET_OP_LIST
 #include "Dialect/Toy/IR/ToyOps.cpp.inc"
@@ -45,7 +47,7 @@ ToyOpsDialect::ToyOpsDialect(MLIRContext *context)
 // PrintOp
 /*
 void PrintOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                  mlir::Value input) {
+		  mlir::Value input) {
   state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
   state.addOperands({input});
 }
@@ -53,8 +55,9 @@ void PrintOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
 //===----------------------------------------------------------------------===//
 // AddOp
 
-void AddOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                  mlir::Value lhs, mlir::Value rhs) {
+void AddOp::build(mlir::OpBuilder& builder, mlir::OperationState& state,
+    mlir::Value lhs, mlir::Value rhs)
+{
   state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
-  state.addOperands({lhs, rhs});
+  state.addOperands({ lhs, rhs });
 }

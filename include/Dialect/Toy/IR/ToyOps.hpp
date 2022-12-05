@@ -23,14 +23,15 @@
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Value.h"
 
+#include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 
 namespace mlir {
 
 class ToyOpsDialect : public Dialect {
-public:
-    ToyOpsDialect(MLIRContext *context);
-    static StringRef getDialectNamespace() { return "toy"; }
+  public:
+  ToyOpsDialect(MLIRContext* context);
+  static StringRef getDialectNamespace() { return "toy"; }
 };
 } // end of namespace mlir
 
@@ -38,4 +39,3 @@ public:
 #include "Dialect/Toy/IR/ToyOps.hpp.inc"
 
 #endif
-

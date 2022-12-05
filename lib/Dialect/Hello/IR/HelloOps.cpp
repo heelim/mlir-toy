@@ -3,7 +3,7 @@
 #include <iostream>
 #include <queue>
 
-#include "mlir/Dialect/StandardOps/IR/Ops.h"
+#include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/IR/Block.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinOps.h"
@@ -21,8 +21,8 @@
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Value.h"
 
-#include "mlir/Transforms/InliningUtils.h"
 #include "mlir/Transforms/DialectConversion.h"
+#include "mlir/Transforms/InliningUtils.h"
 
 #include "llvm/ADT/SetVector.h"
 #include "llvm/ADT/SmallBitVector.h"
@@ -30,13 +30,15 @@
 #include "Dialect/Hello/IR/HelloOps.hpp"
 
 using namespace mlir;
+using namespace mlir::func;
 
 //===----------------------------------------------------------------------===//
 // Hello dialect.
 //===----------------------------------------------------------------------===//
 
-HelloOpsDialect::HelloOpsDialect(MLIRContext *context)
-  : Dialect(getDialectNamespace(), context, TypeID::get<HelloOpsDialect>()) {
+HelloOpsDialect::HelloOpsDialect(MLIRContext* context)
+    : Dialect(getDialectNamespace(), context, TypeID::get<HelloOpsDialect>())
+{
   addOperations<
 #define GET_OP_LIST
 #include "Dialect/Hello/IR/HelloOps.cpp.inc"
@@ -50,7 +52,7 @@ HelloOpsDialect::HelloOpsDialect(MLIRContext *context)
 // HelloWorldOp
 /*
 void HelloWorldOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                  mlir::Value input) {
+		  mlir::Value input) {
   state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
   state.addOperands({input});
 }
@@ -58,8 +60,9 @@ void HelloWorldOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
 //===----------------------------------------------------------------------===//
 // HelloConvertOp
 
-void F32ToF64TensorOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                  mlir::Value input) {
+void F32ToF64TensorOp::build(mlir::OpBuilder& builder, mlir::OperationState& state,
+    mlir::Value input)
+{
   state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
-  state.addOperands({input});
+  state.addOperands({ input });
 }
