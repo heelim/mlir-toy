@@ -26,14 +26,7 @@
 #include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 
-namespace mlir {
-
-class ToyOpsDialect : public Dialect {
-  public:
-  ToyOpsDialect(MLIRContext* context);
-  static StringRef getDialectNamespace() { return "toy"; }
-};
-} // end of namespace mlir
+#include "Dialect/Toy/IR/ToyOpsDialect.hpp.inc"
 
 #define GET_OP_CLASSES
 #include "Dialect/Toy/IR/ToyOps.hpp.inc"

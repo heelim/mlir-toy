@@ -28,6 +28,7 @@
 #include "llvm/ADT/SmallBitVector.h"
 
 #include "Dialect/Hello/IR/HelloOps.hpp"
+#include "Dialect/Hello/IR/HelloOpsDialect.cpp.inc"
 
 using namespace mlir;
 using namespace mlir::func;
@@ -36,8 +37,7 @@ using namespace mlir::func;
 // Hello dialect.
 //===----------------------------------------------------------------------===//
 
-HelloOpsDialect::HelloOpsDialect(MLIRContext* context)
-    : Dialect(getDialectNamespace(), context, TypeID::get<HelloOpsDialect>())
+void HelloDialect::initialize()
 {
   addOperations<
 #define GET_OP_LIST

@@ -23,6 +23,7 @@
 #include "mlir/Transforms/InliningUtils.h"
 
 #include "Dialect/Toy/IR/ToyOps.hpp"
+#include "Dialect/Toy/IR/ToyOpsDialect.cpp.inc"
 
 using namespace mlir;
 using namespace mlir::func;
@@ -31,8 +32,7 @@ using namespace mlir::func;
 // Toy dialect.
 //===----------------------------------------------------------------------===//
 
-ToyOpsDialect::ToyOpsDialect(MLIRContext* context)
-    : Dialect(getDialectNamespace(), context, TypeID::get<ToyOpsDialect>())
+void ToyDialect::initialize()
 {
   addOperations<
 #define GET_OP_LIST

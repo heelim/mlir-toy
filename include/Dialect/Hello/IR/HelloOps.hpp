@@ -26,14 +26,7 @@
 #include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 
-namespace mlir {
-
-class HelloOpsDialect : public Dialect {
-  public:
-  HelloOpsDialect(MLIRContext* context);
-  static StringRef getDialectNamespace() { return "hello"; }
-};
-} // end of namespace mlir
+#include "Dialect/Hello/IR/HelloOpsDialect.hpp.inc"
 
 #define GET_OP_CLASSES
 #include "Dialect/Hello/IR/HelloOps.hpp.inc"

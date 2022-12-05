@@ -58,8 +58,8 @@ void initPasses()
 int main(int argc, char** argv)
 {
   mlir::DialectRegistry registry;
-  registry.insert<mlir::HelloOpsDialect>();
-  registry.insert<mlir::ToyOpsDialect>();
+  registry.insert<mlir::HelloDialect>();
+  registry.insert<mlir::ToyDialect>();
   registry.insert<mlir::func::FuncDialect>();
   initPasses();
 
