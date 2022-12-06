@@ -27,6 +27,7 @@
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 
 #include "Dialect/Hello/IR/HelloOpsDialect.hpp.inc"
+#include "Dialect/Hello/IR/HelloOpsInterface.hpp.inc"
 
 #define GET_OP_CLASSES
 #include "Dialect/Hello/IR/HelloOps.hpp.inc"

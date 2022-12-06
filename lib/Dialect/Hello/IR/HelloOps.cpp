@@ -29,6 +29,7 @@
 
 #include "Dialect/Hello/IR/HelloOps.hpp"
 #include "Dialect/Hello/IR/HelloOpsDialect.cpp.inc"
+#include "Dialect/Hello/IR/HelloOpsInterface.cpp.inc"
 
 using namespace mlir;
 using namespace mlir::func;
@@ -65,4 +66,26 @@ void F32ToF64TensorOp::build(mlir::OpBuilder& builder, mlir::OperationState& sta
 {
   state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
   state.addOperands({ input });
+}
+
+void TaskOp::build(mlir::OpBuilder& builder, mlir::OperationState& state,
+    mlir::IntegerAttr task_id)
+{
+  state.addAttribute("task_id", task_id);
+
+  Region* region = state.addRegion();
+
+  TaskOp::ensureTerminator(*region, builder, state.location);
+}
+
+void AddPartOp::build(mlir::OpBuilder& builder, mlir::OperationState& state,
+    mlir::Value lhs, mlir::Value rhs)
+{
+  state.addTypes(UnrankedTensorType::get(builder.getF64Type()));
+  state.addOperands({ lhs, rhs });
+}
+
+void AddPartOp::inferShapes()
+{
+  getResult().setType(getOperand(0).getType());
 }

@@ -58,6 +58,72 @@ void mlir::populateLoweringToyPrintOpToHelloPatterns(
   patterns.insert<ToyPrintOpToHello>(context);
 }
 //===----------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+// AddOp
+//===----------------------------------------------------------------------===//
+struct ToyAddOpToHello : public mlir::ConversionPattern {
+  ToyAddOpToHello(MLIRContext* context)
+      : ConversionPattern(mlir::AddOp::getOperationName(), 1, context)
+  {
+  }
+
+  LogicalResult matchAndRewrite(mlir::Operation* op, mlir::ArrayRef<Value> operands,
+      mlir::ConversionPatternRewriter& rewriter) const final
+  {
+
+    Location loc = op->getLoc();
+    AddOpAdaptor operandAdaptor(operands);
+
+    auto allocOp = rewriter.create<AllocOp>(loc, operandAdaptor.lhs().getType());
+
+    ShapedType shapeAdaptor(operandAdaptor.lhs().getType());
+    int64_t nrOfTasks = shapeAdaptor.getDimSize(0);
+    for (int64_t task = 0; task < nrOfTasks; task++) {
+      IntegerAttr taskNum = rewriter.getI64IntegerAttr(task);
+      auto taskop = rewriter.create<TaskOp>(loc, taskNum);
+      rewriter.setInsertionPointToStart(taskop.getTaskBlock());
+
+      // shape
+      std::vector<int64_t> res;
+      /* SmallVector<int64_t> res; */
+      /* llvm::ArrayRef<int64_t> res; */
+      res = shapeAdaptor.getShape().vec();
+      res.front() = 1;
+      ArrayRef<int64_t> shape(res);
+      auto splitType = RankedTensorType::get(shape, shapeAdaptor.getElementType());
+
+      // array attribute
+      auto splitPos = rewriter.getI64ArrayAttr({ task, 0 });
+
+      // Create LoadOp
+      auto loadOpLhs = rewriter.create<LoadOp>(loc, splitType, operandAdaptor.lhs(), splitPos);
+      auto loadOpRhs = rewriter.create<LoadOp>(loc, splitType, operandAdaptor.rhs(), splitPos);
+
+      // Create AddPartOp
+      auto addPartOp = rewriter.create<AddPartOp>(loc, loadOpLhs, loadOpRhs);
+
+      // Infer Result Shape
+      addPartOp.inferShapes();
+
+      // Create StoreOp
+      rewriter.create<StoreOp>(loc, addPartOp, allocOp, splitPos);
+
+      rewriter.setInsertionPointAfter(taskop);
+    }
+
+    rewriter.replaceOp(op, allocOp.getResult());
+
+    return success();
+  }
+};
+
+void mlir::populateLoweringToyAddOpToHelloPatterns(
+    RewritePatternSet& patterns, MLIRContext* context)
+{
+  patterns.insert<ToyAddOpToHello>(context);
+}
+
+//===----------------------------------------------------------------------===//
 
 namespace {
 struct ConvertToyToHelloPass
@@ -87,12 +153,14 @@ void ConvertToyToHelloPass::runOnOperation()
   target.addLegalDialect<HelloDialect>();
 
   target.addLegalOp<ToyReturnOp>();
-  target.addLegalOp<AddOp>();
+  target.addIllegalOp<PrintOp>();
+  target.addIllegalOp<AddOp>();
 
   RewritePatternSet patterns(&getContext());
 
   // ----------- Adding Patterns for Lowering Pass ----------- //
   populateLoweringToyPrintOpToHelloPatterns(patterns, &getContext());
+  populateLoweringToyAddOpToHelloPatterns(patterns, &getContext());
   // --------------------------------------------------------- //
   if (mlir::failed(applyPartialConversion(module, target, std::move(patterns)))) {
     signalPassFailure();

@@ -45,7 +45,7 @@ def PrintOp : Op<Toy_Dialect, "print",[]> {
   //  ];
 }
 
-def AddOp : Op<Toy_Dialect, "add", [NoSideEffect]> {
+def AddOp : Op<Toy_Dialect, "add", [NoSideEffect, SameOperandsShape, SameOperandsAndResultShape]> {
   let summary = "element-wise addition operation";
   let description = [{
     The "add" operation performs element-wise addition between two tensors.
